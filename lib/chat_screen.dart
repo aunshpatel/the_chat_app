@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:the_chat_app/welcome_screen.dart';
 import 'components/constants.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -38,6 +39,8 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
+                _auth.signOut();
+                Navigator.pushNamed(context, WelcomeScreen.id);
                 //Implement logout functionality
               }),
         ],

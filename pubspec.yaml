@@ -19,7 +19,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   firebase_core: ^2.8.0
   firebase_auth: ^4.3.0
-  #flutterfire configure --project=the-chat-app-51b
+  modal_progress_hud: ^0.1.3
 
 dev_dependencies:
   flutter_test:

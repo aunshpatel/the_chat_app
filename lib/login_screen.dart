@@ -5,6 +5,7 @@ import 'layouts.dart';
 import 'components/constants.dart';
 import 'components/rounded_buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   String email = '', pwd = '';
   final _auth = FirebaseAuth.instance;
+  bool showSpinner = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,65 +26,74 @@ class _LoginScreenState extends State<LoginScreen> {
           //resizeToAvoidBottomInset: false,
             backgroundColor: Color(0XFF97978D),
             //backgroundColor: Colors.white,
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height - 100,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      HeroLogo(tag:'logo',height: 250.0, image: 'images/the-chat-app-transparent.png'),
-                      const SizedBox(
-                        height: 48.0,
-                      ),
-                      TextField(
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged:(value){
-                          email = value;
-                        },
-                        style: TextStyle(color: Colors.white),
-                        decoration: buildInputDecoration('Enter your email'),
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
+            body: ModalProgressHUD(
+              inAsyncCall: showSpinner,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: SingleChildScrollView(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height - 100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            HeroLogo(tag:'logo',height: 250.0, image: 'images/the-chat-app-transparent.png'),
+                            const SizedBox(
+                              height: 48.0,
+                            ),
+                            TextField(
+                              keyboardType: TextInputType.emailAddress,
+                              onChanged:(value){
+                                email = value;
+                              },
+                              style: TextStyle(color: Colors.white),
+                              decoration: buildInputDecoration('Enter your email'),
+                            ),
+                            const SizedBox(
+                              height: 15.0,
+                            ),
 
-                      TextField(
-                        obscureText: true,
-                        onChanged:(value){
-                          pwd = value;
-                        },
-                        style: const TextStyle(color: Colors.white),
-                        decoration: buildInputDecoration('Enter your password'),
-                      ),
-                      const SizedBox(
-                        height: 24.0,
-                      ),
-                      RoundedButton(
-                          colour:kLightBlueAccent,
-                          title:'Login',
-                          onPress:() async {
-                            final user = await _auth.signInWithEmailAndPassword(email: email, password: pwd);
-                            //print(user);
-                            try{
-                              if(user !=null){
-                                Navigator.pushNamed(context, ChatScreen.id);
-                              }
-                              else{
-                                print('Hi');
-                              }
-                            }catch(e){
-                              print('Error:$e');
-                            }
-                          }
-                      ),
-                    ],
-                  ),
-                )
-              )
-            ),
+                            TextField(
+                              obscureText: true,
+                              onChanged:(value){
+                                pwd = value;
+                              },
+                              style: const TextStyle(color: Colors.white),
+                              decoration: buildInputDecoration('Enter your password'),
+                            ),
+                            const SizedBox(
+                              height: 24.0,
+                            ),
+                            RoundedButton(
+                                colour:kLightBlueAccent,
+                                title:'Login',
+                                onPress:() async {
+                                  final user = await _auth.signInWithEmailAndPassword(email: email, password: pwd);
+                                  //print(user);
+                                  try{
+                                    setState(() {
+                                      showSpinner = true;
+                                    });
+                                    if(user !=null){
+                                      Navigator.pushNamed(context, ChatScreen.id);
+                                      setState(() {
+                                        showSpinner = false;
+                                      });
+                                    }
+                                    else{
+                                      print('Hi');
+                                    }
+                                  }catch(e){
+                                    print('Error:$e');
+                                  }
+                                }
+                            ),
+                          ],
+                        ),
+                      )
+                  )
+              ),
+            )
         )
     );
   }
