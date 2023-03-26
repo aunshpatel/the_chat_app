@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:the_chat_app/login_screen.dart';
 import 'package:the_chat_app/registration_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    /*return SafeArea(
         child: Scaffold(
           backgroundColor: animation.value,
           //backgroundColor: Colors.white,
@@ -63,26 +64,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                           //height: animation.value * 100,
                         ),
                       ),
-                      /*DefaultTextStyle(
-                          style: TextStyle(
-                            fontSize: 42.0,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.black,
-                          ),
-                          child: AnimatedTextKit(
-                            animatedTexts: [
-                              TypewriterAnimatedText('The Chat App')
-                            ],
-                          )
-                      ),*/
-                      /*Text(
-                        'Flash Chat',
-                        style: TextStyle(
-                          fontSize: 45.0,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
-                        ),
-                      ),*/
+                      // DefaultTextStyle(
+                      //     style: TextStyle(
+                      //       fontSize: 42.0,
+                      //       fontWeight: FontWeight.w900,
+                      //       color: Colors.black,
+                      //     ),
+                      //     child: AnimatedTextKit(
+                      //       animatedTexts: [
+                      //         TypewriterAnimatedText('The Chat App')
+                      //       ],
+                      //     )
+                      // ),
+                      // Text(
+                      //   'Flash Chat',
+                      //   style: TextStyle(
+                      //     fontSize: 45.0,
+                      //     fontWeight: FontWeight.w900,
+                      //     color: Colors.black,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -107,6 +108,157 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
             ),
           ),
         )
+    );*/
+    return FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot){
+        if (snapshot.hasError) {
+          return SomethingWentWrong();
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          print('Returned from if statement');
+          return SafeArea(
+              child: Scaffold(
+                backgroundColor: animation.value,
+                //backgroundColor: Colors.white,
+                body: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: <Widget>[
+                            Hero(
+                              tag: 'logo',
+                              child: Container(
+                                child: Image.asset('images/the-chat-app-transparent.png'),
+                                height: 250,
+                                //height: animation.value * 100,
+                              ),
+                            ),
+                            // DefaultTextStyle(
+                            //     style: TextStyle(
+                            //       fontSize: 42.0,
+                            //       fontWeight: FontWeight.w900,
+                            //       color: Colors.black,
+                            //     ),
+                            //     child: AnimatedTextKit(
+                            //       animatedTexts: [
+                            //         TypewriterAnimatedText('The Chat App')
+                            //       ],
+                            //     )
+                            // ),
+                            // Text(
+                            //   'Flash Chat',
+                            //   style: TextStyle(
+                            //     fontSize: 45.0,
+                            //     fontWeight: FontWeight.w900,
+                            //     color: Colors.black,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 48.0,
+                      ),
+                      RoundedButton(
+                          colour:kLightBlueAccent,
+                          title:'Login',
+                          onPress:(){
+                            Navigator.pushNamed(context, LoginScreen.id);
+                          }
+                      ),
+                      RoundedButton(
+                          colour:kBlueAccent,
+                          title:'Register',
+                          onPress:(){
+                            Navigator.pushNamed(context, RegistrationScreen.id);
+                          }
+                      ),
+                    ],
+                  ),
+                ),
+              )
+          );
+        }
+        return SafeArea(
+            child: Scaffold(
+              backgroundColor: animation.value,
+              //backgroundColor: Colors.white,
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: <Widget>[
+                          Hero(
+                            tag: 'logo',
+                            child: Container(
+                              child: Image.asset('images/the-chat-app-transparent.png'),
+                              height: 250,
+                              //height: animation.value * 100,
+                            ),
+                          ),
+                          // DefaultTextStyle(
+                          //     style: TextStyle(
+                          //       fontSize: 42.0,
+                          //       fontWeight: FontWeight.w900,
+                          //       color: Colors.black,
+                          //     ),
+                          //     child: AnimatedTextKit(
+                          //       animatedTexts: [
+                          //         TypewriterAnimatedText('The Chat App')
+                          //       ],
+                          //     )
+                          // ),
+                          // Text(
+                          //   'Flash Chat',
+                          //   style: TextStyle(
+                          //     fontSize: 45.0,
+                          //     fontWeight: FontWeight.w900,
+                          //     color: Colors.black,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 48.0,
+                    ),
+                    RoundedButton(
+                        colour:kLightBlueAccent,
+                        title:'Login',
+                        onPress:(){
+                          Navigator.pushNamed(context, LoginScreen.id);
+                        }
+                    ),
+                    RoundedButton(
+                        colour:kBlueAccent,
+                        title:'Register',
+                        onPress:(){
+                          Navigator.pushNamed(context, RegistrationScreen.id);
+                        }
+                    ),
+                  ],
+                ),
+              ),
+            )
+        );
+      }
     );
   }
+}
+
+SomethingWentWrong(){
+  print('Something went wrong');
 }

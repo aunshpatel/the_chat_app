@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:the_chat_app/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'layouts.dart';
 import 'components/constants.dart';
 import 'components/rounded_buttons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -12,7 +14,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String email = '', password = '';
+  String email = '', pwd = '';
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,13 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 /*LayoutTextField(
                   obscureText:true,
                   onChange:(value){},
-                  hintText: 'Enter your password',
+                  hintText: 'Enter your pwd',
                 ),*/
 
                 TextField(
                   obscureText: true,
                   onChanged:(value){
-                    email = value;
+                    pwd = value;
                   },
                   style: const TextStyle(color: Colors.white),
                   decoration: buildInputDecoration('Enter your password'),
@@ -66,8 +69,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 RoundedButton(
                     colour:kLightBlueAccent,
                     title:'Login',
-                    onPress:(){
-                      Navigator.pushNamed(context, ChatScreen.id);
+                    onPress:() async {
+                      final user = await _auth.signInWithEmailAndPassword(email: email, password: pwd);
+                      //print(user);
+                      try{
+                        if(user !=null){
+                          Navigator.pushNamed(context, ChatScreen.id);
+                        }
+                        else{
+                          print('Hi');
+                        }
+                      }catch(e){
+                        print('Error:$e');
+                      }
+                      //Navigator.pushNamed(context, ChatScreen.id);
+
                     }
                 ),
               ],
