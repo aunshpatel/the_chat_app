@@ -65,7 +65,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               colour:kBlueAccent,
                               title:'Register',
                               onPress:() async{
-                                print('Email:$emailID, password:$pwd');
+                                //print('Email:$emailID, password:$pwd');
                                 setState(() {
                                   showSpinner = true;
                                 });
