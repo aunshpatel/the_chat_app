@@ -28,7 +28,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             inAsyncCall: showSpinner,
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0),
-                child: SingleChildScrollView(
+                /*child: SingleChildScrollView(
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height-100,
                       child: Column(
@@ -86,7 +86,64 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ],
                       ),
                     )
-                )
+                )*/
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height-100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Flexible(child: HeroLogo(tag:'logo',height: 250.0, image: 'images/the-chat-app-transparent.png'),),
+                    const SizedBox(
+                      height: 48.0,
+                    ),
+                    TextField(
+                      onChanged:(value){
+                        emailID = value;
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      style: TextStyle(color: Colors.white),
+                      decoration: buildInputDecoration('Enter your email'),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    TextField(
+                      obscureText: true,
+                      onChanged:(value){
+                        pwd = value;
+                      },
+                      style: TextStyle(color: Colors.white),
+                      decoration: buildInputDecoration('Enter your password'),
+                    ),
+                    const SizedBox(
+                      height: 24.0,
+                    ),
+                    RoundedButton(
+                        colour:kBlueAccent,
+                        title:'Register',
+                        onPress:() async{
+                          //print('Email:$emailID, password:$pwd');
+                          setState(() {
+                            showSpinner = true;
+                          });
+                          try{
+                            final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
+                            if(newUser != null){
+                              Navigator.pushNamed(context, ChatScreen.id);
+                              setState(() {
+                                showSpinner = false;
+                              });
+                            }
+                          }
+                          catch(e){
+                            print(e);
+                          }
+                        }
+                    ),
+                  ],
+                ),
+              ),
             ),
           )
         )
