@@ -63,9 +63,48 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         colour:kBlueAccent,
                         title:'Register',
                         onPress:() async{
-                          setState(() {
-                            showSpinner = true;
-                          });
+                          if(emailID != '' && pwd != ''){
+                            if(pwd.length < 6){
+                              _showMyDialog('Please atleast 6 digits for your password.');
+                            }
+                            else{
+                              //final user = await _auth.signInWithEmailAndPassword(email: email, password: pwd);
+                              setState(() {
+                                showSpinner = true;
+                              });
+                              try{
+                                final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
+                                if(user != null){
+                                  Navigator.pushNamed(context, ChatScreen.id);
+                                  setState(() {
+                                    showSpinner = false;
+                                  });
+                                }
+                                else{
+                                  _showMyDialog('Incorrect email or password. Please enter your email and password again.');
+                                }
+                              }catch(e){
+                                //_showMyDialog('${e.toString()}');
+                                return _showMyDialog('${e.toString()}');
+                                //print('Error:$e');
+                              }
+                            }
+                          }
+                          else if(pwd.isEmpty && emailID.isNotEmpty){
+                            _showMyDialog('No password entered. Please enter the your password.');
+                          }
+                          else if(pwd.isNotEmpty && emailID.isEmpty){
+                            _showMyDialog('No email id entered. Please enter your email id.');
+                          }
+                          else if(emailID.isEmpty && pwd.isEmpty){
+                            _showMyDialog('Email and password fields are empty. Please enter both values to login.');
+                          }
+                          else if(emailID == '' && pwd != ''){
+                            _showMyDialog('Please enter your email id to login.');
+                          }
+                          else if(emailID == '' && pwd != ''){
+                            _showMyDialog('Please enter your password to login.');
+                          }
                           try{
                             final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
                             if(newUser != null){
@@ -86,6 +125,35 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
           )
         )
+    );
+  }
+
+  Future<void> _showMyDialog(String text) async {
+    String AlertText = text;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Warning!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(AlertText),
+                //Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
