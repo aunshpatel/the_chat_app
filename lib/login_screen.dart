@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            backgroundColor: Color(0XFF97978D),
+            backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
             body: ModalProgressHUD(
               inAsyncCall: showSpinner,
               child: Padding(
@@ -53,10 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
                           onChanged:(value){
-                            print('Email value:$value');
                             email = emailController.text;
                           },
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: kWhiteColor),
                           decoration: emailInputDecoration('Enter your email'),
                         ),
                         const SizedBox(
@@ -66,10 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: passwordController,
                           obscureText: _passwordVisible == false ? true : false,
                           onChanged:(value){
-                            print('Password value:$value');
                             pwd = passwordController.text;
                           },
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: kWhiteColor),
                           decoration: passwordInputDecoration(
                             'Enter your password',
                             _passwordVisible,
@@ -80,31 +78,27 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                           ),
                         ),
-                          //decoration: emailInputDecoration('Enter your password'),),
                         const SizedBox(
                           height: 24.0,
                         ),
                         Row(
                           children: [
                             Checkbox(
-                              checkColor: Colors.white,
+                              checkColor: kWhiteColor,
                               side: MaterialStateBorderSide.resolveWith(
-                                (states) => BorderSide(width: 1.0, color: Colors.white),
+                                (states) => const BorderSide(width: 1.0, color: kWhiteColor),
                               ),
                               fillColor: MaterialStateProperty.all(Colors.transparent),
                               value: _isChecked,
                               onChanged: (value){
                                 _isChecked = !_isChecked!;
-                                print('_isChecked:$_isChecked');
-                                print('value:$value');
-                                //_handleRememberMe(_isChecked);
                                 actionRemeberMe(_isChecked);
                               },
                             ),
                             Text(
                               'Remember Me',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: kWhiteColor,
                                 fontSize: 16
                               ),
                             )
@@ -116,54 +110,52 @@ class _LoginScreenState extends State<LoginScreen> {
                         RoundedButton(
                           colour:kLightBlueAccent,
                           title:'Login',
-                            onPress:() async {
-                              if(emailController.text != '' && passwordController.text != '') {
-                                if(emailController.text.length < 6){
-                                  _showMyDialog('Incorrect password! Please check your password length and try again.');
-                                }
-                                else{
-                                  //final user = await _auth.signInWithEmailAndPassword(email: email, password: pwd);
-                                  setState(() {
-                                    showSpinner = true;
-                                  });
-                                  try{
-                                    final user = await _auth.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-                                    if(user != null){
-                                      Navigator.pushNamed(context, ChatScreen.id);
-                                      setState(() {
-                                        showSpinner = false;
-                                      });
-                                    }
-                                    else{
-                                      _showMyDialog('Incorrect email or password. Please enter your email and password again.');
-                                      setState(() {
-                                        showSpinner = false;
-                                      });
-                                    }
-                                  }catch(e){
+                          onPress:() async {
+                            if(emailController.text != '' && passwordController.text != '') {
+                              if(emailController.text.length < 6){
+                                _showMyDialog('Incorrect password! Please check your password length and try again.');
+                              }
+                              else{
+                                setState(() {
+                                  showSpinner = true;
+                                });
+                                try{
+                                  final user = await _auth.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+                                  if(user != null){
+                                    Navigator.pushNamed(context, ChatScreen.id);
                                     setState(() {
                                       showSpinner = false;
                                     });
-                                    return _showMyDialog('${e.toString()}');
-                                    //print('Error:$e');
                                   }
+                                  else{
+                                    _showMyDialog('Incorrect email or password. Please enter your email and password again.');
+                                    setState(() {
+                                      showSpinner = false;
+                                    });
+                                  }
+                                } catch(e){
+                                  setState(() {
+                                    showSpinner = false;
+                                  });
+                                  return _showMyDialog('${e.toString()}');
                                 }
                               }
-                              else if(passwordController.text.isEmpty && emailController.text.isNotEmpty){
-                                _showMyDialog('No password entered. Please enter the your password.');
-                              }
-                              else if(passwordController.text.isNotEmpty && emailController.text.isEmpty){
-                                _showMyDialog('No email id entered. Please enter your email id.');
-                              }
-                              else if(emailController.text.isEmpty && passwordController.text.isEmpty){
-                                _showMyDialog('Email and password fields are empty. Please enter both values to login.');
-                              }
-                              else if(emailController.text == '' && passwordController.text != ''){
-                                _showMyDialog('Please enter your email id to login.');
-                              }
-                              else if(emailController.text == '' && passwordController.text != ''){
-                                _showMyDialog('Please enter your password to login.');
-                              }
+                            }
+                            else if(passwordController.text.isEmpty && emailController.text.isNotEmpty){
+                              _showMyDialog('No password entered. Please enter the your password.');
+                            }
+                            else if(passwordController.text.isNotEmpty && emailController.text.isEmpty){
+                              _showMyDialog('No email id entered. Please enter your email id.');
+                            }
+                            else if(emailController.text.isEmpty && passwordController.text.isEmpty){
+                              _showMyDialog('Email and password fields are empty. Please enter both values to login.');
+                            }
+                            else if(emailController.text == '' && passwordController.text != ''){
+                              _showMyDialog('Please enter your email id to login.');
+                            }
+                            else if(emailController.text == '' && passwordController.text != ''){
+                              _showMyDialog('Please enter your password to login.');
+                            }
                           },
                         ),
                       ],
@@ -175,46 +167,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  //Code for 'Remember Me' Functionality
-  /*void _handleRememberMe(bool value) {
-    print('Handle Rember Me');
-    _isChecked = value;
-    // if(_isChecked == true){
-    //   SharedPreferences.getInstance().then((prefs) {
-    //       prefs.setBool('remember_me', _isChecked);
-    //       prefs.setString('email', emailController.text);
-    //       prefs.setString('password', passwordController.text);
-    //     },
-    //   );
-    // }
-    // else{
-    //   SharedPreferences.getInstance().then((prefs) {
-    //       emailController.text = '';
-    //       passwordController.text = '';
-    //       prefs.setBool('remember_me', _isChecked);
-    //       prefs.setString('email', emailController.text);
-    //       prefs.setString('password', passwordController.text);
-    //     },
-    //   );
-    // }
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool('remember_me', _isChecked);
-      prefs.setString('email', emailController.text);
-      prefs.setString('password', passwordController.text);
-    },
-    );
-    setState(() {
-      _isChecked = value;
-    });
-  }*/
-
   actionRemeberMe(bool value) {
     _isChecked = value;
-    print('_isChecked:$_isChecked');
-    SharedPreferences.getInstance().then(
-          (prefs) {
+    SharedPreferences.getInstance().then((prefs) {
         prefs.setBool("remember_me", _isChecked);
-        prefs.setString('userId', emailController.text);
+        prefs.setString('email', emailController.text);
         prefs.setString('password', passwordController.text);
       },
     );
@@ -226,27 +183,30 @@ class _LoginScreenState extends State<LoginScreen> {
   void _loadUserEmailPassword() async {
     print('Load Email');
     try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      var emailID = _prefs.getString('email') ?? '';
-      var password = _prefs.getString('password') ?? '';
-      var rememberMe = _prefs.getBool('remember_me') ?? false;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      loginEmailID = prefs.getString('email') ?? '';
+      loginPassword = prefs.getString('password') ?? '';
+
+      var rememberMe = prefs.getBool('remember_me') ?? false;
 
       print('rememberMe:$rememberMe');
-      print('emailID:$emailID');
-      print('password:$password');
+      print('emailID:$loginEmailID');
+      print('password:$loginPassword');
       if (rememberMe == true) {
         setState(() {
           _isChecked = true;
         });
-        emailController.text = emailID;
-        passwordController.text = password;
+        emailController.text = loginEmailID;
+        passwordController.text = loginPassword;
       }
       else{
         setState(() {
           _isChecked = false;
         });
         emailController.text = '';
+        loginEmailID = '';
         passwordController.text = '';
+        loginPassword = '';
       }
     } catch (e) {
       print(e);
@@ -258,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String AlertText = text;
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Warning!'),
@@ -266,7 +226,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: ListBody(
               children: <Widget>[
                 Text(AlertText),
-                //Text('Would you like to approve of this message?'),
               ],
             ),
           ),

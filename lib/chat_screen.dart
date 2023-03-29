@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_chat_app/welcome_screen.dart';
 import 'components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,34 +40,41 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Scaffold(
         endDrawerEnableOpenDragGesture: false,
         drawer: Drawer(
-            backgroundColor: Color(0XFF97978D),
+            backgroundColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
+            elevation: 20,
             child: Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: ListView(
                 children: [
                   Container(
                     decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
-                            color: Colors.white
+                            color: darkTheme == false ? kWhiteColor : kBlackColor,
                         )
                       )
                     ),
                     child: ListTile(
-                      title: const Text(
-                        'Change Theme',
+                      title: Text(
+                        darkTheme == false ? 'Change To Dark Theme' : 'Change To Light Theme',
                         style: kTextStyle,
                       ),
-                      onTap: (){
-
+                      onTap: () async{
+                        setState(() {
+                          darkTheme = !darkTheme;
+                        });
+                        SharedPreferences.getInstance().then((prefs) {
+                            prefs.setBool("darkTheme", darkTheme);
+                          },
+                        );
                       },
                     ),
                   ),
                   Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.white
+                          color: darkTheme == false ? kWhiteColor : kBlackColor,
                         )
                       )
                     ),
@@ -85,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             )
         ),
-        backgroundColor: Color(0XFF97978D),
+        backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
         appBar: AppBar(
           leading: Builder(
             builder: (BuildContext context) {
@@ -99,20 +107,14 @@ class _ChatScreenState extends State<ChatScreen> {
             },
           ),
           actions: <Widget>[
-            /*IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                _auth.signOut();
-                Navigator.pushNamed(context, WelcomeScreen.id);
-              }),*/
+
           ],
           centerTitle: true,
-          title: Text('The Chat App'),
-          backgroundColor: Color(0XFF97978D).withOpacity(0.3),
-          //backgroundColor: kLightBlueAccent,
+          title: const Text('The Chat App'),
+          backgroundColor: darkTheme == false ? kLightBackgroundColor.withOpacity(0.3) : Colors.blueGrey,
         ),
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
+          padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
           child:Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,7 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Expanded(
                       child: TextField(
                         controller: textMessageController,
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: kWhiteColor),
                         decoration: kMessageTextFieldDecoration,
                         onChanged: (value) {
                           messageText = value;
@@ -138,7 +140,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email});
                         textMessageController.clear();
                       },
-                      child: const Text(
+                      child: Text(
                         'Send',
                         style: kSendButtonTextStyle,
                       ),
@@ -186,17 +188,17 @@ class MessagesStream extends StatelessWidget {
           messageBubbles.add(messageBubble);
         }
         return Expanded(
-            child: isMessageBubblesEmpty == true?
-            ListView(
-              reverse: true,
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children:messageBubbles,
-                )
-              ],
-            ): SizedBox(
+          child: isMessageBubblesEmpty == true ?
+          ListView(
+            reverse: true,
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children:messageBubbles,
+              )
+            ],
+          ) : SizedBox(
               height: MediaQuery.of(context).size.height - 250,
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -208,7 +210,7 @@ class MessagesStream extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white
+                        color: kWhiteColor
                     ),
                   ),
                 ],
@@ -238,9 +240,9 @@ class MessageBubble extends StatelessWidget {
           children: [
             Text(
               sender,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11.0,
-                color: Colors.black54,
+                color:  darkTheme == false ? kBlack54Color : kWhiteColor,
               ),
             ),
             const SizedBox(height: 2.0,),
@@ -248,13 +250,13 @@ class MessageBubble extends StatelessWidget {
               elevation: 5.0,
               borderRadius: isMe == true ? const BorderRadius.only(topLeft: Radius.circular(30.0), bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)) :
               const BorderRadius.only(topRight: Radius.circular(30.0), bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)),
-              color: isMe ==true? Colors.lightBlue : Colors.lightGreen,
+              color:  darkTheme == false ? (isMe ==true ? kLightBlue : kLightGreen) : (isMe ==true? kGray : Colors.blueGrey),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                 child: Text(
                   text,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: kWhiteColor,
                     fontSize: 18.0,
                   ),
                 ),

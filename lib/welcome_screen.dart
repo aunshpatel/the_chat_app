@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_chat_app/login_screen.dart';
 import 'package:the_chat_app/registration_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,17 +22,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
+    loadData();
     controller = AnimationController(vsync:this, duration: const Duration(seconds: 1),);
 
-    animation = ColorTween(begin: Colors.blueGrey, end:Color(0XFF97978D),).animate(controller);
-    //animation = ColorTween(begin: Colors.blueGrey, end:Colors.white,).animate(controller);
-    
+    animation = darkTheme == false ? ColorTween(begin: Colors.blueGrey, end: kLightBackgroundColor).animate(controller) :
+    ColorTween(begin: kLightBackgroundColor, end:Colors.blueGrey,).animate(controller);
+
     controller.forward();
 
     controller.addListener(() {
       setState(() { });
-      //print(animation.value);
     });
+  }
+
+  loadData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    darkTheme = prefs.getBool('darkTheme')!;
   }
 
   @override
@@ -42,155 +48,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    /*return SafeArea(
-        child: Scaffold(
-          backgroundColor: animation.value,
-          //backgroundColor: Colors.white,
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: <Widget>[
-                      Hero(
-                        tag: 'logo',
-                        child: Container(
-                          child: Image.asset('images/the-chat-app-transparent.png'),
-                          height: 250,
-                          //height: animation.value * 100,
-                        ),
-                      ),
-                      // DefaultTextStyle(
-                      //     style: TextStyle(
-                      //       fontSize: 42.0,
-                      //       fontWeight: FontWeight.w900,
-                      //       color: Colors.black,
-                      //     ),
-                      //     child: AnimatedTextKit(
-                      //       animatedTexts: [
-                      //         TypewriterAnimatedText('The Chat App')
-                      //       ],
-                      //     )
-                      // ),
-                      // Text(
-                      //   'Flash Chat',
-                      //   style: TextStyle(
-                      //     fontSize: 45.0,
-                      //     fontWeight: FontWeight.w900,
-                      //     color: Colors.black,
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 48.0,
-                ),
-                RoundedButton(
-                  colour:kLightBlueAccent,
-                  title:'Login',
-                  onPress:(){
-                    Navigator.pushNamed(context, LoginScreen.id);
-                  }
-                ),
-                RoundedButton(
-                  colour:kBlueAccent,
-                  title:'Register',
-                  onPress:(){
-                    Navigator.pushNamed(context, RegistrationScreen.id);
-                  }
-                ),
-              ],
-            ),
-          ),
-        )
-    );*/
     return FutureBuilder(
       future: Firebase.initializeApp(),
       builder: (context, snapshot){
         if (snapshot.hasError) {
           return SomethingWentWrong();
         }
-
-        // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          print('Returned from if statement');
           return SafeArea(
-              child: Scaffold(
-                backgroundColor: animation.value,
-                //backgroundColor: Colors.white,
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: <Widget>[
-                            Hero(
-                              tag: 'logo',
-                              child: Container(
-                                child: Image.asset('images/the-chat-app-transparent.png'),
-                                height: 250,
-                                //height: animation.value * 100,
-                              ),
-                            ),
-                            // DefaultTextStyle(
-                            //     style: TextStyle(
-                            //       fontSize: 42.0,
-                            //       fontWeight: FontWeight.w900,
-                            //       color: Colors.black,
-                            //     ),
-                            //     child: AnimatedTextKit(
-                            //       animatedTexts: [
-                            //         TypewriterAnimatedText('The Chat App')
-                            //       ],
-                            //     )
-                            // ),
-                            // Text(
-                            //   'Flash Chat',
-                            //   style: TextStyle(
-                            //     fontSize: 45.0,
-                            //     fontWeight: FontWeight.w900,
-                            //     color: Colors.black,
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 48.0,
-                      ),
-                      RoundedButton(
-                          colour:kLightBlueAccent,
-                          title:'Login',
-                          onPress:(){
-                            Navigator.pushNamed(context, LoginScreen.id);
-                          }
-                      ),
-                      RoundedButton(
-                          colour:kBlueAccent,
-                          title:'Register',
-                          onPress:(){
-                            Navigator.pushNamed(context, RegistrationScreen.id);
-                          }
-                      ),
-                    ],
-                  ),
-                ),
-              )
-          );
-        }
-        return SafeArea(
             child: Scaffold(
-              backgroundColor: animation.value,
-              //backgroundColor: Colors.white,
+              backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Column(
@@ -209,50 +76,78 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                               //height: animation.value * 100,
                             ),
                           ),
-                          // DefaultTextStyle(
-                          //     style: TextStyle(
-                          //       fontSize: 42.0,
-                          //       fontWeight: FontWeight.w900,
-                          //       color: Colors.black,
-                          //     ),
-                          //     child: AnimatedTextKit(
-                          //       animatedTexts: [
-                          //         TypewriterAnimatedText('The Chat App')
-                          //       ],
-                          //     )
-                          // ),
-                          // Text(
-                          //   'Flash Chat',
-                          //   style: TextStyle(
-                          //     fontSize: 45.0,
-                          //     fontWeight: FontWeight.w900,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 48.0,
                     ),
                     RoundedButton(
-                        colour:kLightBlueAccent,
-                        title:'Login',
-                        onPress:(){
-                          Navigator.pushNamed(context, LoginScreen.id);
-                        }
+                      colour:kLightBlueAccent,
+                      title:'Login',
+                      onPress:(){
+                        Navigator.pushNamed(context, LoginScreen.id);
+                      }
                     ),
                     RoundedButton(
-                        colour:kBlueAccent,
-                        title:'Register',
-                        onPress:(){
-                          Navigator.pushNamed(context, RegistrationScreen.id);
-                        }
+                      colour:kBlueAccent,
+                      title:'Register',
+                      onPress:(){
+                        Navigator.pushNamed(context, RegistrationScreen.id);
+                      }
                     ),
                   ],
                 ),
               ),
             )
+          );
+        }
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: animation.value,
+            //backgroundColor: kWhiteColor,
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: <Widget>[
+                        Hero(
+                          tag: 'logo',
+                          child: Container(
+                            child: Image.asset('images/the-chat-app-transparent.png'),
+                            height: 250,
+                            //height: animation.value * 100,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 48.0,
+                  ),
+                  RoundedButton(
+                    colour:kLightBlueAccent,
+                    title:'Login',
+                    onPress:(){
+                      Navigator.pushNamed(context, LoginScreen.id);
+                    }
+                  ),
+                  RoundedButton(
+                    colour:kBlueAccent,
+                    title:'Register',
+                    onPress:(){
+                      Navigator.pushNamed(context, RegistrationScreen.id);
+                    }
+                  ),
+                ],
+              ),
+            ),
+          )
         );
       }
     );

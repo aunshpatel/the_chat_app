@@ -23,11 +23,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          backgroundColor: Color(0XFF97978D),
+          backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
           body: ModalProgressHUD(
             inAsyncCall: showSpinner,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height-100,
                 child: Column(
@@ -43,7 +43,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         emailID = value;
                       },
                       keyboardType: TextInputType.emailAddress,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: kWhiteColor),
                       decoration: emailInputDecoration('Enter your email'),
                     ),
                     const SizedBox(
@@ -54,8 +54,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       onChanged:(value){
                         pwd = value;
                       },
-                      style: TextStyle(color: Colors.white),
-                      //decoration: emailInputDecoration('Enter your password'),
+                      style: TextStyle(color: kWhiteColor),
                       decoration: passwordInputDecoration(
                         'Enter your password',
                         _passwordVisible,
@@ -70,15 +69,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       height: 24.0,
                     ),
                     RoundedButton(
-                        colour:kBlueAccent,
-                        title:'Register',
-                        onPress:() async{
+                      colour:kBlueAccent,
+                      title:'Register',
+                      onPress:() async{
                           if(emailID != '' && pwd != ''){
                             if(pwd.length < 6){
-                              _showMyDialog('Please atleast 6 digits for your password.');
+                              _showMyDialog('Please at least 6 digits for your password.');
                             }
                             else{
-                              //final user = await _auth.signInWithEmailAndPassword(email: email, password: pwd);
                               setState(() {
                                 showSpinner = true;
                               });
@@ -94,9 +92,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   _showMyDialog('Incorrect email or password. Please enter your email and password again.');
                                 }
                               }catch(e){
-                                //_showMyDialog('${e.toString()}');
                                 return _showMyDialog('${e.toString()}');
-                                //print('Error:$e');
                               }
                             }
                           }
@@ -142,7 +138,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     String AlertText = text;
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Warning!'),
@@ -150,7 +146,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             child: ListBody(
               children: <Widget>[
                 Text(AlertText),
-                //Text('Would you like to approve of this message?'),
               ],
             ),
           ),

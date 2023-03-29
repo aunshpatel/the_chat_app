@@ -30,23 +30,15 @@ class LayoutTextField extends StatelessWidget {
     return TextField(
       obscureText: obscureText,
       onChanged: onChange,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: kWhiteColor),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.white),
+        hintStyle: TextStyle(color: kWhiteColor),
         contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
         border: kBorder,
         enabledBorder: kEnabledBorder,
         focusedBorder: kFocusedBorder,
       ),
     );
-    /*return InputDecoration(
-      hintText: hintText,
-      hintStyle: TextStyle(color: Colors.white),
-      contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      border: kBorder,
-      enabledBorder: kEnabledBorder,
-      focusedBorder: kFocusedBorder,
-    );*/
   }
 }
