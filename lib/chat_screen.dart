@@ -22,63 +22,113 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCurrentUser();
-    messagesStream();
-    //getMessages();
+    //messagesStream();
   }
 
   void getCurrentUser() async{
     final user = await _auth.currentUser;
     if(user!=null){
       loggedInUser = user;
-      print(loggedInUser.email);
     }
   }
 
-  // void getMessages() async{
-  //   //final messages = await _firestore.collection('messages').get();
-  //   final messages = await _firestore.collection('messages').get();
-  //   final allData = messages.docs.map((doc) => doc.data()).toList();
-  //
-  //   for (var message in messages.docs){
-  //     print('Message values: ${message.data().values}');
-  //   }
-  //   for (var message in allData){
-  //     print('message.entries:${message.entries}');
-  //     print('message.values:${message.values}');
-  //   }
+  // void messagesStream() async{
+  //    await for(var snapshot in _firestore.collection('messages').snapshots()){
+  //      for (var message in snapshot.docs){
+  //        //print('first value:${message.data().values.first}, last value: ${message.data().values.last}');
+  //      }
+  //    }
   // }
-
-  void messagesStream() async{
-     await for(var snapshot in _firestore.collection('messages').snapshots()){
-       for (var message in snapshot.docs){
-         //print('first value:${message.data().values.first}, last value: ${message.data().values.last}');
-       }
-     }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0XFF97978D),
-      appBar: AppBar(
-        leading: null,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () {
-              _auth.signOut();
-              Navigator.pushNamed(context, WelcomeScreen.id);
-            }),
-        ],
-        centerTitle: true,
-        title: Text('The Chat App'),
-        backgroundColor: kLightBlueAccent,
-      ),
-      body: SafeArea(
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        endDrawerEnableOpenDragGesture: false,
+        drawer: Drawer(
+            backgroundColor: Color(0XFF97978D),
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: ListView(
+                children: [
+
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: Colors.white
+                            )
+                        )
+                    ),
+                    child: ListTile(
+                      title: const Text(
+                        'Change Theme',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: (){
+
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.white
+                        )
+                      )
+                    ),
+                    child: ListTile(
+                      title: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onTap: (){
+                        _auth.signOut();
+                        Navigator.pushNamed(context, WelcomeScreen.id);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            )
+        ),
+        backgroundColor: Color(0XFF97978D),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          actions: <Widget>[
+            /*IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                _auth.signOut();
+                Navigator.pushNamed(context, WelcomeScreen.id);
+              }),*/
+          ],
+          centerTitle: true,
+          title: Text('The Chat App'),
+          backgroundColor: kLightBlueAccent,
+        ),
+        body: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
           child:Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,8 +165,8 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
-        )
-      ),
+        ),
+      )
     );
   }
 }
@@ -134,8 +184,7 @@ class MessagesStream extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        final messages = snapshot.data?.docs;
-        //print('messages:$messages');
+        final messages = snapshot.data?.docs.reversed;
         List<MessageBubble> messageBubbles = [];
         for(var message in messages!){
           final messageText = message.get('message');
@@ -149,37 +198,39 @@ class MessagesStream extends StatelessWidget {
             isMessageBubblesEmpty = false;
           }
 
-          final messageBubble = MessageBubble(messageSender, messageText, currentUser == messageSender?true:false);
+          final messageBubble = MessageBubble(messageSender, messageText, currentUser == messageSender ? true : false);
 
           messageBubbles.add(messageBubble);
         }
         return Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            child: isMessageBubblesEmpty == true?
+            ListView(
+              reverse: true,
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               children: [
-                isMessageBubblesEmpty == true? Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children:messageBubbles,
-                ) : SizedBox(
-                  height: MediaQuery.of(context).size.height - 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'You do not have any active chats.\nPlease send a message to start chatting.',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                )
               ],
-            )
+            ): SizedBox(
+              height: MediaQuery.of(context).size.height - 250,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'You do not have any active chats.\nPlease send a message to start chatting.',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+                  ),
+                ],
+              ),
+            ),
         );
       },
     );
@@ -212,16 +263,14 @@ class MessageBubble extends StatelessWidget {
             const SizedBox(height: 2.0,),
             Material(
               elevation: 5.0,
-              borderRadius: isMe == true ? BorderRadius.only(topLeft: Radius.circular(30.0), bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)) :
-              BorderRadius.only(topRight: Radius.circular(30.0), bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)),
-              //borderRadius: BorderRadius.circular(20.0),
+              borderRadius: isMe == true ? const BorderRadius.only(topLeft: Radius.circular(30.0), bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)) :
+              const BorderRadius.only(topRight: Radius.circular(30.0), bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)),
               color: isMe ==true? Colors.lightBlue : Colors.lightGreen,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                 child: Text(
                   text,
-                  //'$text from $sender',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
                   ),

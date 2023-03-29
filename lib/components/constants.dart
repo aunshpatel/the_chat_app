@@ -52,3 +52,10 @@ const kFocusedBorder = OutlineInputBorder(
   borderRadius: BorderRadius.all(Radius.circular(32.0)),
 );
 
+const kBottomBorder = BoxDecoration(
+    border: Border(
+        bottom: BorderSide(
+          color: Colors.white,
+        )
+    )
+);
