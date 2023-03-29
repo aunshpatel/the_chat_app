@@ -56,20 +56,16 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   Container(
                     decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                color: Colors.white
-                            )
+                    border: Border(
+                        bottom: BorderSide(
+                            color: Colors.white
                         )
+                    )
                     ),
                     child: ListTile(
                       title: const Text(
                         'Change Theme',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
+                        style: kTextStyle,
                       ),
                       onTap: (){
 
@@ -77,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
                           color: Colors.white
@@ -87,11 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: ListTile(
                       title: const Text(
                         'Logout',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
+                        style: kTextStyle,
                       ),
                       onTap: (){
                         _auth.signOut();

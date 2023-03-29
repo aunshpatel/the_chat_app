@@ -59,3 +59,9 @@ const kBottomBorder = BoxDecoration(
         )
     )
 );
+
+const kTextStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+  color: Colors.white,
+);
