@@ -17,6 +17,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String emailID = '', pwd = '';
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +44,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       },
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(color: Colors.white),
-                      decoration: buildInputDecoration('Enter your email'),
+                      decoration: emailInputDecoration('Enter your email'),
                     ),
                     const SizedBox(
                       height: 15.0,
                     ),
                     TextField(
-                      obscureText: true,
+                      obscureText: _passwordVisible == false ? true : false,
                       onChanged:(value){
                         pwd = value;
                       },
                       style: TextStyle(color: Colors.white),
-                      decoration: buildInputDecoration('Enter your password'),
+                      //decoration: emailInputDecoration('Enter your password'),
+                      decoration: passwordInputDecoration(
+                        'Enter your password',
+                        _passwordVisible,
+                        (){
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        }
+                      ),
                     ),
                     const SizedBox(
                       height: 24.0,

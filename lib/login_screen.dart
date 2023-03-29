@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String email = '', pwd = '';
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
+  bool _passwordVisible = false;
   bool _isChecked = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -55,21 +56,40 @@ class _LoginScreenState extends State<LoginScreen> {
                             email = value;
                           },
                           style: TextStyle(color: Colors.white),
-                          decoration: buildInputDecoration('Enter your email'),
+                          decoration: emailInputDecoration('Enter your email'),
                         ),
                         const SizedBox(
                           height: 15.0,
                         ),
-
-                        TextField(
+                        
+                        /*TextFormField(
                           controller: passwordController,
                           obscureText: true,
                           onChanged:(value){
                             pwd = value;
                           },
                           style: const TextStyle(color: Colors.white),
-                          decoration: buildInputDecoration('Enter your password'),
+                          decoration: emailInputDecoration('Enter your password'),
+                        )*/
+
+                        TextField(
+                          controller: passwordController,
+                          obscureText: _passwordVisible == false ? true : false,
+                          onChanged:(value){
+                            pwd = value;
+                          },
+                          style: const TextStyle(color: Colors.white),
+                          decoration: passwordInputDecoration(
+                            'Enter your password',
+                            _passwordVisible,
+                            (){
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            }
+                          ),
                         ),
+                          //decoration: emailInputDecoration('Enter your password'),),
                         const SizedBox(
                           height: 24.0,
                         ),
@@ -123,9 +143,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     }
                                     else{
                                       _showMyDialog('Incorrect email or password. Please enter your email and password again.');
+                                      setState(() {
+                                        showSpinner = false;
+                                      });
                                     }
                                   }catch(e){
-                                    //_showMyDialog('${e.toString()}');
+                                    setState(() {
+                                      showSpinner = false;
+                                    });
                                     return _showMyDialog('${e.toString()}');
                                     //print('Error:$e');
                                   }

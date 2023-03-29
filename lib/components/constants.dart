@@ -17,7 +17,7 @@ const kMessageTextFieldDecoration = InputDecoration(
   border: InputBorder.none,
 );
 
-InputDecoration buildInputDecoration(String hintText) {
+InputDecoration emailInputDecoration(String hintText) {
   return InputDecoration(
     hintText: hintText,
     hintStyle: TextStyle(color: Colors.white),
@@ -25,6 +25,27 @@ InputDecoration buildInputDecoration(String hintText) {
     border: kBorder,
     enabledBorder: kEnabledBorder,
     focusedBorder: kFocusedBorder,
+  );
+}
+
+InputDecoration passwordInputDecoration(String hintText, bool _passwordVisible, void toggle()){
+  return InputDecoration(
+    hintText: hintText,
+    hintStyle: TextStyle(color: Colors.white),
+    contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+    border: kBorder,
+    enabledBorder: kEnabledBorder,
+    focusedBorder: kFocusedBorder,
+    suffixIcon: IconButton(
+      icon: Icon(
+        // Based on passwordVisible state choose the icon
+        _passwordVisible
+            ? Icons.visibility
+            : Icons.visibility_off,
+        color: kLightBlueAccent,
+      ),
+      onPressed: toggle,
+    ),
   );
 }
 
