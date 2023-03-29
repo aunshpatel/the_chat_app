@@ -24,7 +24,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     getCurrentUser();
-    //messagesStream();
   }
 
   void getCurrentUser() async{
@@ -33,14 +32,6 @@ class _ChatScreenState extends State<ChatScreen> {
       loggedInUser = user;
     }
   }
-
-  // void messagesStream() async{
-  //    await for(var snapshot in _firestore.collection('messages').snapshots()){
-  //      for (var message in snapshot.docs){
-  //        //print('first value:${message.data().values.first}, last value: ${message.data().values.last}');
-  //      }
-  //    }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +44,13 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: EdgeInsets.all(10.0),
               child: ListView(
                 children: [
-
                   Container(
                     decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
                             color: Colors.white
                         )
-                    )
+                      )
                     ),
                     child: ListTile(
                       title: const Text(
@@ -118,7 +108,8 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
           centerTitle: true,
           title: Text('The Chat App'),
-          backgroundColor: kLightBlueAccent,
+          backgroundColor: Color(0XFF97978D).withOpacity(0.3),
+          //backgroundColor: kLightBlueAccent,
         ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 5.0),
