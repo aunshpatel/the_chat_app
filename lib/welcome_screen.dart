@@ -67,6 +67,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Hero(
                             tag: 'logo',
