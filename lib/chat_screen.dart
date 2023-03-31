@@ -138,8 +138,18 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     MaterialButton(
                       onPressed: (){
-                        _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now()});
-                        textMessageController.clear();
+                        if(messageText.isNotEmpty){
+                          _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now()});
+                          textMessageController.clear();
+                          textMessageController.text = '';
+                        }
+                        else{
+                          textMessageController.text = '';
+                          textMessageController.clear();
+                          _showMyDialog('Please enter text before pressing the "Send" button');
+                        }
+                        // _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now()});
+                        // textMessageController.clear();
                       },
                       child: Text(
                         'Send',
@@ -153,6 +163,34 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       )
+    );
+  }
+
+  Future<void> _showMyDialog(String text) async {
+    String AlertText = text;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Warning!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(AlertText),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

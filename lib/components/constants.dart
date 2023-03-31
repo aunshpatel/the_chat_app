@@ -27,7 +27,7 @@ const kLightBlueAccent = Colors.lightBlueAccent;
 const kBlueAccent = Colors.blueAccent;
 
 var kSendButtonTextStyle = TextStyle(
-  color: darkTheme == false ? kLightBlueAccent : kGray,
+  color: kLightBlueAccent,
   fontWeight: FontWeight.bold,
   fontSize: 18.0,
 );
