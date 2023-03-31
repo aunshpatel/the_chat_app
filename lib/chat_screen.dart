@@ -138,7 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     MaterialButton(
                       onPressed: (){
-                        _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now().toString()});
+                        _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now()});
                         textMessageController.clear();
                       },
                       child: Text(
@@ -170,7 +170,8 @@ class MessagesStream extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        final messages = snapshot.data?.docs.reversed;
+        //final messages = snapshot.data?.docs.reversed;
+        final messages = snapshot.data?.docs;
         List<MessageBubble> messageBubbles = [];
         for(var message in messages!){
           final messageText = message.get('message');
@@ -199,7 +200,8 @@ class MessagesStream extends StatelessWidget {
                 children:messageBubbles,
               )
             ],
-          ) : SizedBox(
+          ) :
+          SizedBox(
               height: MediaQuery.of(context).size.height - 250,
               width: MediaQuery.of(context).size.width,
               child: Column(
