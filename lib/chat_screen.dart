@@ -163,7 +163,7 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').snapshots(),
+      stream: _firestore.collection('messages').orderBy('time', descending: false).snapshots(),
       builder: (context, snapshot){
         if(!snapshot.hasData){
           return const Center(
@@ -186,7 +186,6 @@ class MessagesStream extends StatelessWidget {
           }*/
 
           final messageBubble = MessageBubble(messageSender, messageText, currentUser == messageSender ? true : false);
-
           messageBubbles.add(messageBubble);
         }
         return Expanded(
