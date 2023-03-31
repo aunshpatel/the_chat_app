@@ -138,7 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     MaterialButton(
                       onPressed: (){
-                        _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email});
+                        _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now().toString()});
                         textMessageController.clear();
                       },
                       child: Text(
@@ -159,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
 class MessagesStream extends StatelessWidget {
   MessagesStream({Key? key}) : super(key: key);
-  late bool isMessageBubblesEmpty = false;
+  late bool isMessageBubblesEmpty = true;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -177,12 +177,12 @@ class MessagesStream extends StatelessWidget {
           final messageSender = message.get('sender');
           final currentUser = loggedInUser.email;
 
-          if(messageBubbles.isNotEmpty){
+          /*if(messageBubbles.isNotEmpty){
             isMessageBubblesEmpty = true;
           }
           else{
             isMessageBubblesEmpty = false;
-          }
+          }*/
 
           final messageBubble = MessageBubble(messageSender, messageText, currentUser == messageSender ? true : false);
 
