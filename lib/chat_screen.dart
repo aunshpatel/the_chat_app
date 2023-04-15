@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_chat_app/profile_page.dart';
+import 'package:the_chat_app/side_drawer.dart';
 import 'package:the_chat_app/welcome_screen.dart';
 import 'components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,7 +19,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _auth = FirebaseAuth.instance;
+  //final _auth = FirebaseAuth.instance;
   String messageText = '';
   TextEditingController textMessageController = TextEditingController();
 
@@ -28,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void getCurrentUser() async{
-    final user = await _auth.currentUser;
+    final user = await auth.currentUser;
     if(user!=null){
       loggedInUser = user;
       print('loggedInUser:$loggedInUser');
@@ -40,13 +42,32 @@ class _ChatScreenState extends State<ChatScreen> {
     return SafeArea(
       child: Scaffold(
         endDrawerEnableOpenDragGesture: false,
-        drawer: Drawer(
+        /*drawer: Drawer(
             backgroundColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
             elevation: 20,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListView(
                 children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                              color: darkTheme == false ? kWhiteColor : kBlackColor,
+                            )
+                        )
+                    ),
+                    child: ListTile(
+                      title: const Text(
+                        'My Profile',
+                        style: kTextStyle,
+                      ),
+                      onTap: (){
+                        auth.signOut();
+                        Navigator.pushNamed(context, ProfilePage.id);
+                      },
+                    ),
+                  ),
                   Container(
                     decoration: BoxDecoration(
                     border: Border(
@@ -85,7 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         style: kTextStyle,
                       ),
                       onTap: (){
-                        _auth.signOut();
+                        auth.signOut();
                         Navigator.pushNamed(context, WelcomeScreen.id);
                       },
                     ),
@@ -93,7 +114,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             )
-        ),
+        ),*/
+        drawer: MyDrawer(),
         backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
         appBar: AppBar(
           leading: Builder(
@@ -107,9 +129,9 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             },
           ),
-          actions: <Widget>[
+          /*actions: <Widget>[
 
-          ],
+          ],*/
           centerTitle: true,
           title: const Text('The Chat App'),
           backgroundColor: darkTheme == false ? kLightBackgroundColor.withOpacity(0.3) : Colors.blueGrey,

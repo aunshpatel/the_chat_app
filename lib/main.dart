@@ -1,3 +1,4 @@
+import 'package:the_chat_app/profile_page.dart';
 import 'package:the_chat_app/registration_screen.dart';
 import 'package:the_chat_app/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.id : (context) => LoginScreen(),
         RegistrationScreen.id : (context) => RegistrationScreen(),
         ChatScreen.id : (context) => ChatScreen(),
+        ProfilePage.id : (context) => ProfilePage(),
       },
     );
   }
