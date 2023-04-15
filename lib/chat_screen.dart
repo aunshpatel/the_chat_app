@@ -139,7 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     MaterialButton(
                       onPressed: (){
                         if(messageText.isNotEmpty){
-                          _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now()});
+                          _firestore.collection('messages').add({'message':messageText, ' er':loggedInUser.email, 'time':DateTime.now()});
                           textMessageController.clear();
                           textMessageController.text = '';
                         }

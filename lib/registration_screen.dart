@@ -5,6 +5,9 @@ import 'components/constants.dart';
 import 'layouts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final _registrationSctreenFirestore = FirebaseFirestore.instance;
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -14,10 +17,11 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  String emailID = '', pwd = '';
+  String emailID = '', pwd = '', fullName = '', confirmationPwd = '';
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +41,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     Flexible(child: HeroLogo(tag:'logo',height: 250.0, image: 'images/the-chat-app-transparent.png'),),
                     const SizedBox(
                       height: 48.0,
+                    ),
+                    TextField(
+                      onChanged:(value){
+                        fullName = value;
+                      },
+                      style: const TextStyle(color: kWhiteColor),
+                      decoration: emailInputDecoration('Enter your full name.'),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
                     ),
                     TextField(
                       onChanged:(value){
@@ -66,6 +80,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(
+                      height: 15.0,
+                    ),
+                    TextField(
+                      obscureText: _confirmPasswordVisible == false ? true : false,
+                      onChanged:(value){
+                        confirmationPwd = value;
+                      },
+                      style: TextStyle(color: kWhiteColor),
+                      decoration: passwordInputDecoration(
+                        'Confirm your password',
+                        _confirmPasswordVisible,
+                        (){
+                          setState(() {
+                            _confirmPasswordVisible = !_confirmPasswordVisible;
+                          });
+                        }
+                      ),
+                    ),
+                    const SizedBox(
                       height: 24.0,
                     ),
                     RoundedButton(
@@ -74,25 +107,51 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       onPress:() async{
                           if(emailID != '' && pwd != ''){
                             if(pwd.length < 6){
-                              _showMyDialog('Please at least 6 digits for your password.');
+                              setState(() {
+                                showSpinner = false;
+                              });
+                              _showMyDialog('Please at least 6 characters for your password.');
                             }
                             else{
-                              setState(() {
-                                showSpinner = true;
-                              });
-                              try{
-                                final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
-                                if(user != null){
-                                  Navigator.pushNamed(context, ChatScreen.id);
+                              if(confirmationPwd == pwd){
+                                setState(() {
+                                  showSpinner = true;
+                                });
+                                try{
+                                  final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
+                                  if(newUser != null){
+                                    _registrationSctreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
+                                    final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
+                                    if(user != null){
+                                      Navigator.pushNamed(context, ChatScreen.id);
+                                      setState(() {
+                                        showSpinner = false;
+                                      });
+                                    }
+                                    else{
+                                      _showMyDialog('Incorrect email or password. Please enter your email and password again.');
+                                    }
+                                  }
+
+                                  /*final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
+                                  if(user != null){
+                                    Navigator.pushNamed(context, ChatScreen.id);
+                                    setState(() {
+                                      showSpinner = false;
+                                    });
+                                  }
+                                  else{
+                                    _showMyDialog('Incorrect email or password. Please enter your email and password again.');
+                                  }*/
+                                } catch(e){
                                   setState(() {
                                     showSpinner = false;
                                   });
+                                  return _showMyDialog('${e.toString()}');
                                 }
-                                else{
-                                  _showMyDialog('Incorrect email or password. Please enter your email and password again.');
-                                }
-                              }catch(e){
-                                return _showMyDialog('${e.toString()}');
+                              }
+                              else {
+                                _showMyDialog('Your passwords are not same. Please check and enter again.');
                               }
                             }
                           }
@@ -111,9 +170,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           else if(emailID == '' && pwd != ''){
                             _showMyDialog('Please enter your password to login.');
                           }
-                          try{
+
+                          /*try{
                             final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
                             if(newUser != null){
+                            _registrationSctreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
                               Navigator.pushNamed(context, ChatScreen.id);
                               setState(() {
                                 showSpinner = false;
@@ -122,7 +183,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           }
                           catch(e){
                             print(e);
-                          }
+                          }*/
                         }
                     ),
                   ],
