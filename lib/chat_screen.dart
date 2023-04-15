@@ -133,7 +133,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           ],*/
           centerTitle: true,
-          title: const Text('The Chat App'),
+          title: const Text('Chat Screen'),
           backgroundColor: darkTheme == false ? kLightBackgroundColor.withOpacity(0.3) : Colors.blueGrey,
         ),
         body: Padding(

@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             ],
             centerTitle: true,
-            title: const Text('The Chat App'),
+            title: const Text('My Profile'),
             backgroundColor: darkTheme == false ? kLightBackgroundColor.withOpacity(0.3) : Colors.blueGrey,
           ),
           body: Padding(

@@ -25,11 +25,25 @@ class _MyDrawerState extends State<MyDrawer> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                          color: darkTheme == false ? kWhiteColor : kBlackColor,
-                        )
+                  border: Border(
+                    bottom: BorderSide(
+                      color: darkTheme == false ? kWhiteColor : kBlackColor,
                     )
+                  )
+                ),
+                child: SizedBox(
+                  height: 200,
+                  child: Image.asset('images/the-chat-app-transparent.png')
+                )
+              ),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: darkTheme == false ? kWhiteColor : kBlackColor,
+                    )
+                  )
                 ),
                 child: ListTile(
                   title: const Text(
@@ -43,11 +57,11 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                          color: darkTheme == false ? kWhiteColor : kBlackColor,
-                        )
+                  border: Border(
+                    bottom: BorderSide(
+                      color: darkTheme == false ? kWhiteColor : kBlackColor,
                     )
+                  )
                 ),
                 child: ListTile(
                   title: const Text(
@@ -61,11 +75,11 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                          color: darkTheme == false ? kWhiteColor : kBlackColor,
-                        )
+                  border: Border(
+                    bottom: BorderSide(
+                      color: darkTheme == false ? kWhiteColor : kBlackColor,
                     )
+                  )
                 ),
                 child: ListTile(
                   title: Text(
@@ -85,11 +99,11 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                          color: darkTheme == false ? kWhiteColor : kBlackColor,
-                        )
+                  border: Border(
+                    bottom: BorderSide(
+                      color: darkTheme == false ? kWhiteColor : kBlackColor,
                     )
+                  )
                 ),
                 child: ListTile(
                   title: const Text(
