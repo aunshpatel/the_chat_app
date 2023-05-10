@@ -6,6 +6,8 @@ final auth = FirebaseAuth.instance;
 
 bool darkTheme = false;
 
+late User loggedInUser;
+
 String loginEmailID = '';
 
 String loginPassword = '';

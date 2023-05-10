@@ -1,9 +1,16 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_chat_app/side_drawer.dart';
-import 'package:the_chat_app/welcome_screen.dart';
-
+import 'package:intl/intl.dart';
 import 'components/constants.dart';
+
+TextEditingController emailController = TextEditingController();
+TextEditingController nameController = TextEditingController();
+String registeredEmailID = '';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,10 +21,32 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  //late User loggedInUser;
+  int _value = 0;
+
+  @override
+  void initState(){
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async{
+    final user = await auth.currentUser;
+    if(user!=null){
+      emailController.text = user.email.toString();
+      registeredEmailID = user.email.toString();
+      //nameController.text =
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
+      child: Scaffold(
+          backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
           endDrawerEnableOpenDragGesture: false,
           /*drawer: Drawer(
               backgroundColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
@@ -93,7 +122,6 @@ class _ProfilePageState extends State<ProfilePage> {
               )
           ),*/
           drawer: MyDrawer(),
-          backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
           appBar: AppBar(
             leading: Builder(
               builder: (BuildContext context) {
@@ -114,19 +142,173 @@ class _ProfilePageState extends State<ProfilePage> {
             backgroundColor: darkTheme == false ? kLightBackgroundColor.withOpacity(0.3) : Colors.blueGrey,
           ),
           body: Padding(
-            padding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+            padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
             child:Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  decoration: kMessageContainerDecoration,
-                  child: Text('Hi')
+                SizedBox(
+                  height: 180,
+                  child: CurrentUserDetails(),
+                ),
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Application Theme:',
+                      style: TextStyle(
+                        color: kWhiteColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 7.0,
+                    ),
+                    SizedBox(
+                      width: 70.0,
+                      child: DropdownButton(
+                        value: _value,
+                        dropdownColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
+                        items: <DropdownMenuItem<int>>[
+                          DropdownMenuItem(
+                            child: Text(
+                              'Light',
+                              style: kTextStyle,
+                            ),
+                            value: 0,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              'Dark',
+                              style: kTextStyle,
+                            ),
+                            value: 1,
+                          ),
+                        ],
+                        onChanged: (int? value) async{
+                          setState(() {
+                            _value = value!;
+                            if(value == 0){
+                              darkTheme = false;
+                            }
+                            else if(value == 1){
+                              darkTheme = true;
+                            }
+                            SharedPreferences.getInstance().then((prefs) {
+                              prefs.setBool("darkTheme", darkTheme);
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         )
+    );
+  }
+}
+
+
+class CurrentUserDetails extends StatelessWidget {
+  late bool isContactListEmpty = true;
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance.collection('registeredUsers').snapshots(),
+      builder: (_, snapshot) {
+        if (snapshot.hasError) return Text('Error = ${snapshot.error}');
+
+        if (snapshot.hasData) {
+          final docs = snapshot.data!.docs;
+          print('Docs: $docs');
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (_, i) {
+              final data = docs[i].data();
+              if(data['emailID'].toString() == loggedInUser.email.toString()){
+                nameController.text = data['fullName'].toString();
+                emailController.text = data['emailID'].toString();
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Name:',
+                      style: TextStyle(
+                        color: kWhiteColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 5.0,),
+                    Container(
+                        height:50,
+                        decoration: kMessageContainerDecoration,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: nameController,
+                                style: const TextStyle(color: kWhiteColor),
+                                decoration: const InputDecoration(
+                                  enabled: false,
+                                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                                  //hintText: 'Type your message here...',
+                                  hintStyle: TextStyle(color: kWhiteColor),
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: null,
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                    const SizedBox(height: 20,),
+                    const Text(
+                      'Email ID:',
+                      style: TextStyle(
+                        color: kWhiteColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 5.0,),
+                    Container(
+                        height:50,
+                        decoration: kMessageContainerDecoration,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: emailController,
+                                style: const TextStyle(color: kWhiteColor),
+                                decoration: const InputDecoration(
+                                  enabled: false,
+                                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                                  //hintText: 'Type your message here...',
+                                  hintStyle: TextStyle(color: kWhiteColor),
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: null,
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                  ],
+                );
+              }
+              else{
+                return SizedBox(height:0);
+              }
+            },
+          );
+        }
+
+        return Center(child: CircularProgressIndicator());
+      },
     );
   }
 }
