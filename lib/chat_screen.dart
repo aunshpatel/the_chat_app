@@ -1,10 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:the_chat_app/profile_page.dart';
 import 'package:the_chat_app/side_drawer.dart';
-import 'package:the_chat_app/welcome_screen.dart';
 import 'components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -18,7 +13,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  //final _auth = FirebaseAuth.instance;
   String messageText = '';
   TextEditingController textMessageController = TextEditingController();
 
@@ -42,79 +36,6 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Scaffold(
         backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
         endDrawerEnableOpenDragGesture: false,
-        /*drawer: Drawer(
-            backgroundColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
-            elevation: 20,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                              color: darkTheme == false ? kWhiteColor : kBlackColor,
-                            )
-                        )
-                    ),
-                    child: ListTile(
-                      title: const Text(
-                        'My Profile',
-                        style: kTextStyle,
-                      ),
-                      onTap: (){
-                        auth.signOut();
-                        Navigator.pushNamed(context, ProfilePage.id);
-                      },
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: darkTheme == false ? kWhiteColor : kBlackColor,
-                        )
-                      )
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        darkTheme == false ? 'Change To Dark Theme' : 'Change To Light Theme',
-                        style: kTextStyle,
-                      ),
-                      onTap: () async{
-                        setState(() {
-                          darkTheme = !darkTheme;
-                        });
-                        SharedPreferences.getInstance().then((prefs) {
-                            prefs.setBool("darkTheme", darkTheme);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: darkTheme == false ? kWhiteColor : kBlackColor,
-                        )
-                      )
-                    ),
-                    child: ListTile(
-                      title: const Text(
-                        'Logout',
-                        style: kTextStyle,
-                      ),
-                      onTap: (){
-                        auth.signOut();
-                        Navigator.pushNamed(context, WelcomeScreen.id);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            )
-        ),*/
         drawer: MyDrawer(),
         appBar: AppBar(
           leading: Builder(
@@ -128,9 +49,6 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             },
           ),
-          /*actions: <Widget>[
-
-          ],*/
           centerTitle: true,
           title: const Text('Chat Screen'),
           backgroundColor: darkTheme == false ? kLightBackgroundColor.withOpacity(0.3) : Colors.blueGrey,
@@ -169,8 +87,6 @@ class _ChatScreenState extends State<ChatScreen> {
                           textMessageController.clear();
                           _showMyDialog('Please enter text before pressing the "Send" button');
                         }
-                        // _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now()});
-                        // textMessageController.clear();
                       },
                       child: Text(
                         'Send',
@@ -224,25 +140,17 @@ class MessagesStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore.collection('messages').orderBy('time', descending: false).snapshots(),
       builder: (context, snapshot){
-        if(!snapshot.hasData){
+        if(!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        //final messages = snapshot.data?.docs.reversed;
         final messages = snapshot.data?.docs;
         List<MessageBubble> messageBubbles = [];
         for(var message in messages!){
           final messageText = message.get('message');
           final messageSender = message.get('sender');
           final currentUser = loggedInUser.email;
-
-          /*if(messageBubbles.isNotEmpty){
-            isMessageBubblesEmpty = true;
-          }
-          else{
-            isMessageBubblesEmpty = false;
-          }*/
 
           final messageBubble = MessageBubble(messageSender, messageText, currentUser == messageSender ? true : false);
           messageBubbles.add(messageBubble);
@@ -265,13 +173,13 @@ class MessagesStream extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Text(
                     'You do not have any active chats.\nPlease send a message to start chatting.',
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: kWhiteColor
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: kWhiteColor
                     ),
                   ),
                 ],

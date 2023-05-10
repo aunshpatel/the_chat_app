@@ -54,6 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
         if (snapshot.hasError) {
           return SomethingWentWrong();
         }
+
         if (snapshot.connectionState == ConnectionState.done) {
           return SafeArea(
             child: Scaffold(
@@ -106,7 +107,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
         return SafeArea(
           child: Scaffold(
             backgroundColor: animation.value,
-            //backgroundColor: kWhiteColor,
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Column(
@@ -119,10 +119,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                       children: <Widget>[
                         Hero(
                           tag: 'logo',
-                          child: Container(
-                            child: Image.asset('images/the-chat-app-transparent.png'),
+                          child: SizedBox(
                             height: 250,
-                            //height: animation.value * 100,
+                            child: Image.asset('images/the-chat-app-transparent.png'),
                           ),
                         ),
                       ],

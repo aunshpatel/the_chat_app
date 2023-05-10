@@ -49,21 +49,6 @@ class _MainMenuPageState extends State<MainMenuPage> {
                 height: MediaQuery.of(context).size.height,
                 child: ContactList(),
               ),
-              /*Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: darkTheme == false ? kWhiteColor : kBlackColor,
-                    ),
-                  ),
-                ),
-                child: ListTile(
-                  title: const Text(
-                    'The Chat App',
-                    style: kTextStyle,
-                  ),
-                ),
-              ),*/
             ],
           ),
         ),
@@ -107,10 +92,6 @@ class ContactList extends StatelessWidget {
                   ),
                 ),
               );
-              /*return ListTile(
-                title: Text(data['emailID']),
-                subtitle: Text(data['fullName']),
-              );*/
             },
           );
         }
@@ -118,43 +99,6 @@ class ContactList extends StatelessWidget {
         return Center(child: CircularProgressIndicator());
       },
     );
-    /*return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('registeredUsers').snapshots(),
-      builder: (context, snapshot){
-        if(!snapshot.hasData){
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        final users = snapshot.data?.docs;
-        print('Contact List:$users');
-        List<ContactList> userList = [];
-        for(var user in users!){
-          final emailID = user.get('emailID');
-          final fullName = user.get('fullName');
-
-          final newUserList = ContactList(emailID, fullName);
-          userList.add(newUserList);
-        }
-
-        return Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: darkTheme == false ? kWhiteColor : kBlackColor,
-              ),
-            ),
-          ),
-          child: ListTile(
-            title: Text(
-              'The Chat App',
-              style: kTextStyle,
-            ),
-          ),
-        );
-      },
-    );*/
   }
 }
 

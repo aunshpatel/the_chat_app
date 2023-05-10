@@ -26,7 +26,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
+      child: Scaffold(
           backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
           body: ModalProgressHUD(
             inAsyncCall: showSpinner,
@@ -102,38 +102,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       height: 24.0,
                     ),
                     RoundedButton(
-                      colour:kBlueAccent,
-                      title:'Register',
-                      onPress:() async{
-                          if(emailID != '' && pwd != ''){
-                            if(pwd.length < 6){
+                    colour:kBlueAccent,
+                    title:'Register',
+                    onPress:() async{
+                        if(emailID != '' && pwd != ''){
+                          if(pwd.length < 6){
+                            setState(() {
+                              showSpinner = false;
+                            });
+                            _showMyDialog('Please at least 6 characters for your password.');
+                          }
+                          else{
+                            if(confirmationPwd == pwd){
                               setState(() {
-                                showSpinner = false;
+                                showSpinner = true;
                               });
-                              _showMyDialog('Please at least 6 characters for your password.');
-                            }
-                            else{
-                              if(confirmationPwd == pwd){
-                                setState(() {
-                                  showSpinner = true;
-                                });
-                                try{
-                                  final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
-                                  if(newUser != null){
-                                    _registrationSctreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
-                                    final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
-                                    if(user != null){
-                                      Navigator.pushNamed(context, ChatScreen.id);
-                                      setState(() {
-                                        showSpinner = false;
-                                      });
-                                    }
-                                    else{
-                                      _showMyDialog('Incorrect email or password. Please enter your email and password again.');
-                                    }
-                                  }
-
-                                  /*final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
+                              try{
+                                final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
+                                if(newUser != null){
+                                  _registrationSctreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
+                                  final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
                                   if(user != null){
                                     Navigator.pushNamed(context, ChatScreen.id);
                                     setState(() {
@@ -142,49 +130,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   }
                                   else{
                                     _showMyDialog('Incorrect email or password. Please enter your email and password again.');
-                                  }*/
-                                } catch(e){
-                                  setState(() {
-                                    showSpinner = false;
-                                  });
-                                  return _showMyDialog('${e.toString()}');
+                                  }
                                 }
-                              }
-                              else {
-                                _showMyDialog('Your passwords are not same. Please check and enter again.');
+                              } catch(e){
+                                setState(() {
+                                  showSpinner = false;
+                                });
+                                return _showMyDialog('${e.toString()}');
                               }
                             }
-                          }
-                          else if(pwd.isEmpty && emailID.isNotEmpty){
-                            _showMyDialog('No password entered. Please enter the your password.');
-                          }
-                          else if(pwd.isNotEmpty && emailID.isEmpty){
-                            _showMyDialog('No email id entered. Please enter your email id.');
-                          }
-                          else if(emailID.isEmpty && pwd.isEmpty){
-                            _showMyDialog('Email and password fields are empty. Please enter both values to login.');
-                          }
-                          else if(emailID == '' && pwd != ''){
-                            _showMyDialog('Please enter your email id to login.');
-                          }
-                          else if(emailID == '' && pwd != ''){
-                            _showMyDialog('Please enter your password to login.');
-                          }
-
-                          /*try{
-                            final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
-                            if(newUser != null){
-                            _registrationSctreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
-                              Navigator.pushNamed(context, ChatScreen.id);
-                              setState(() {
-                                showSpinner = false;
-                              });
+                            else {
+                              _showMyDialog('Your passwords are not same. Please check and enter again.');
                             }
                           }
-                          catch(e){
-                            print(e);
-                          }*/
                         }
+                        else if(pwd.isEmpty && emailID.isNotEmpty){
+                          _showMyDialog('No password entered. Please enter the your password.');
+                        }
+                        else if(pwd.isNotEmpty && emailID.isEmpty){
+                          _showMyDialog('No email id entered. Please enter your email id.');
+                        }
+                        else if(emailID.isEmpty && pwd.isEmpty){
+                          _showMyDialog('Email and password fields are empty. Please enter both values to login.');
+                        }
+                        else if(emailID == '' && pwd != ''){
+                          _showMyDialog('Please enter your email id to login.');
+                        }
+                        else if(emailID == '' && pwd != ''){
+                          _showMyDialog('Please enter your password to login.');
+                        }
+                      }
                     ),
                   ],
                 ),

@@ -1,11 +1,7 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_chat_app/side_drawer.dart';
-import 'package:intl/intl.dart';
 import 'components/constants.dart';
 
 TextEditingController emailController = TextEditingController();
@@ -23,7 +19,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  //late User loggedInUser;
   int _value = 0;
 
   @override
@@ -38,7 +33,6 @@ class _ProfilePageState extends State<ProfilePage> {
     if(user!=null){
       emailController.text = user.email.toString();
       registeredEmailID = user.email.toString();
-      //nameController.text =
     }
   }
 
@@ -245,26 +239,26 @@ class CurrentUserDetails extends StatelessWidget {
                     ),
                     const SizedBox(height: 5.0,),
                     Container(
-                        height:50,
-                        decoration: kMessageContainerDecoration,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: nameController,
-                                style: const TextStyle(color: kWhiteColor),
-                                decoration: const InputDecoration(
-                                  enabled: false,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                                  //hintText: 'Type your message here...',
-                                  hintStyle: TextStyle(color: kWhiteColor),
-                                  border: InputBorder.none,
-                                ),
-                                onChanged: null,
+                      height:50,
+                      decoration: kMessageContainerDecoration,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: nameController,
+                              style: const TextStyle(color: kWhiteColor),
+                              decoration: const InputDecoration(
+                                enabled: false,
+                                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                                //hintText: 'Type your message here...',
+                                hintStyle: TextStyle(color: kWhiteColor),
+                                border: InputBorder.none,
                               ),
+                              onChanged: null,
                             ),
-                          ],
-                        )
+                          ),
+                        ],
+                      )
                     ),
                     const SizedBox(height: 20,),
                     const Text(
@@ -276,9 +270,9 @@ class CurrentUserDetails extends StatelessWidget {
                     ),
                     const SizedBox(height: 5.0,),
                     Container(
-                        height:50,
-                        decoration: kMessageContainerDecoration,
-                        child: Row(
+                      height:50,
+                      decoration: kMessageContainerDecoration,
+                      child: Row(
                           children: [
                             Expanded(
                               child: TextField(
