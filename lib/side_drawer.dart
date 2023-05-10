@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_chat_app/chat_screen.dart';
+import 'package:the_chat_app/main_menu_page.dart';
 import 'package:the_chat_app/profile_page.dart';
 import 'package:the_chat_app/welcome_screen.dart';
 
@@ -39,6 +40,24 @@ class _MyDrawerState extends State<MyDrawer> {
 
               Container(
                 decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                          color: darkTheme == false ? kWhiteColor : kBlackColor,
+                        )
+                    )
+                ),
+                child: ListTile(
+                  title: const Text(
+                    'Main Screen',
+                    style: kTextStyle,
+                  ),
+                  onTap: (){
+                    Navigator.pushNamed(context, MainMenuPage.id);
+                  },
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
                       color: darkTheme == false ? kWhiteColor : kBlackColor,
@@ -73,30 +92,35 @@ class _MyDrawerState extends State<MyDrawer> {
                   },
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: darkTheme == false ? kWhiteColor : kBlackColor,
-                    )
-                  )
-                ),
-                child: ListTile(
-                  title: Text(
-                    darkTheme == false ? 'Change To Dark Theme' : 'Change To Light Theme',
-                    style: kTextStyle,
-                  ),
-                  onTap: () async{
-                    setState(() {
-                      darkTheme = !darkTheme;
-                    });
-                    SharedPreferences.getInstance().then((prefs) {
-                      prefs.setBool("darkTheme", darkTheme);
-                    },
-                    );
-                  },
-                ),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     border: Border(
+              //       bottom: BorderSide(
+              //         color: darkTheme == false ? kWhiteColor : kBlackColor,
+              //       )
+              //     )
+              //   ),
+              //   child: ListTile(
+              //     title: Text(
+              //       darkTheme == false ? 'Change To Dark Theme' : 'Change To Light Theme',
+              //       style: kTextStyle,
+              //     ),
+              //     onTap: () async{
+              //       setState(() {
+              //         darkTheme = !darkTheme;
+              //       });
+              //       print('Darktheme: $darkTheme');
+              //       SharedPreferences.getInstance().then((prefs) {
+              //         prefs.setBool("darkTheme", darkTheme);
+              //         setState(() {
+              //           darkTheme = !darkTheme;
+              //         });
+              //         print('Darktheme: $darkTheme');
+              //       },
+              //       );
+              //     },
+              //   ),
+              // ),
               Container(
                 decoration: BoxDecoration(
                   border: Border(
