@@ -9,7 +9,6 @@ import 'components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firestore = FirebaseFirestore.instance;
-late User loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -41,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
         endDrawerEnableOpenDragGesture: false,
         /*drawer: Drawer(
             backgroundColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
@@ -116,7 +116,6 @@ class _ChatScreenState extends State<ChatScreen> {
             )
         ),*/
         drawer: MyDrawer(),
-        backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
         appBar: AppBar(
           leading: Builder(
             builder: (BuildContext context) {
@@ -161,7 +160,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     MaterialButton(
                       onPressed: (){
                         if(messageText.isNotEmpty){
-                          _firestore.collection('messages').add({'message':messageText, ' er':loggedInUser.email, 'time':DateTime.now()});
+                          _firestore.collection('messages').add({'message':messageText, 'sender':loggedInUser.email, 'time':DateTime.now()});
                           textMessageController.clear();
                           textMessageController.text = '';
                         }
