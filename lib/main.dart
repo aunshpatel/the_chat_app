@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+
+import 'package:the_chat_app/main_menu_page.dart';
 import 'package:the_chat_app/profile_page.dart';
 import 'package:the_chat_app/registration_screen.dart';
 import 'package:the_chat_app/welcome_screen.dart';
-import 'package:flutter/material.dart';
-
 import 'chat_screen.dart';
 import 'login_screen.dart';
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         RegistrationScreen.id : (context) => RegistrationScreen(),
         ChatScreen.id : (context) => ChatScreen(),
         ProfilePage.id : (context) => ProfilePage(),
+        MainMenuPage.id : (context) => MainMenuPage(),
       },
     );
   }
