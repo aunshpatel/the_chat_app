@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-final _registrationSctreenFirestore = FirebaseFirestore.instance;
+final _registrationScreenFirestore = FirebaseFirestore.instance;
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
+        backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
           /*body: ModalProgressHUD(
             inAsyncCall: showSpinner,
             child: Padding(
@@ -120,7 +120,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               try{
                                 final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
                                 if(newUser != null){
-                                  _registrationSctreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
+                                  _registrationScreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
                                   final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
                                   if(user != null){
                                     Navigator.pushNamed(context, ChatScreen.id);
@@ -165,7 +165,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
             ),
-          )*/
+        )*/
         body:Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SizedBox(
@@ -183,7 +183,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     fullName = value;
                   },
                   style: const TextStyle(color: kWhiteColor),
-                  decoration: emailInputDecoration('Enter your full name.'),
+                  decoration: emailInputDecoration('Enter your full name'),
                 ),
                 const SizedBox(
                   height: 15.0,
@@ -254,9 +254,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               showSpinner = true;
                             });
                             try{
-                              final newUser = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
-                              if(newUser != null){
-                                _registrationSctreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
+                              final user = await _auth.createUserWithEmailAndPassword(email: emailID, password: pwd);
+                              user.user?.updateDisplayName(fullName);
+                              if(user != null){
+                                _registrationScreenFirestore.collection('registeredUsers').add({'fullName':fullName, 'emailID':emailID,});
                                 final user = await _auth.signInWithEmailAndPassword(email: emailID, password: pwd);
                                 if(user != null){
                                   Navigator.pushNamed(context, ChatScreen.id);
