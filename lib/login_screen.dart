@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:the_chat_app/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:the_chat_app/welcome_screen.dart';
 import 'layouts.dart';
 import 'components/constants.dart';
 import 'components/rounded_buttons.dart';
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
+          backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
             /*body: ModalProgressHUD(
               inAsyncCall: showSpinner,
               child: Padding(
@@ -163,10 +164,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
               ),
             )*/
+          appBar: appBarDetails,
           body:Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height - 100,
+              height: MediaQuery.of(context).size.height - 150,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,

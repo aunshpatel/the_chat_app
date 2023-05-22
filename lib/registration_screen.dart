@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_chat_app/welcome_screen.dart';
 import 'chat_screen.dart';
 import 'components/rounded_buttons.dart';
 import 'components/constants.dart';
@@ -166,10 +167,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
             ),
         )*/
+        appBar: appBarDetails,
         body:Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height-100,
+            height: MediaQuery.of(context).size.height - 150,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,

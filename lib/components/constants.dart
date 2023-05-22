@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../welcome_screen.dart';
+
 final auth = FirebaseAuth.instance;
 
 bool darkTheme = false;
@@ -14,7 +16,7 @@ String loginPassword = '';
 
 var kDarkBackgroundColor = Colors.blueGrey.shade800;
 
-var kLightBackgroundColor = Color(0XFF97978D);
+var kLightBackgroundColor = const Color(0XFF97978D);
 
 const kWhiteColor = Colors.white;
 
@@ -36,6 +38,23 @@ var kSendButtonTextStyle = TextStyle(
   color: kLightBlueAccent,
   fontWeight: FontWeight.bold,
   fontSize: 18.0,
+);
+
+var appBarDetails = AppBar(
+  leading: Builder(
+    builder: (BuildContext context) {
+      return IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pushNamed(context, WelcomeScreen.id);
+        },
+        tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+      );
+    },
+  ),
+  elevation: 0,
+  centerTitle: true,
+  backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
 );
 
 const kMessageTextFieldDecoration = InputDecoration(
