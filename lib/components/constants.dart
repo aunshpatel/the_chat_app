@@ -84,6 +84,15 @@ var kMessageContainerDecoration = BoxDecoration(
   ),
 );
 
+var kDisabledInputFieldDecoration = const BoxDecoration(
+  border: Border(
+    top: BorderSide(color: Color(0XFF787878), width: 2.0,),
+    left: BorderSide(color: Color(0XFF787878), width: 2.0),
+    right: BorderSide(color: Color(0XFF787878), width: 2.0),
+    bottom: BorderSide(color: Color(0XFF787878), width: 2.0),
+  ),
+);
+
 const kBorder = OutlineInputBorder(
   borderRadius: BorderRadius.all(Radius.circular(32.0)),
 );

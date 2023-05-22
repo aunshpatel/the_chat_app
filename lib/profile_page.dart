@@ -28,11 +28,17 @@ class _ProfilePageState extends State<ProfilePage> {
     getCurrentUser();
   }
 
-  void getCurrentUser() async{
-    final user = await auth.currentUser;
+  void getCurrentUser(){
+    final user = auth.currentUser;
     if(user!=null){
       emailController.text = user.email.toString();
       registeredEmailID = user.email.toString();
+    }
+    if(darkTheme == true){
+      _value = 1;
+    }
+    else{
+      _value = 0;
     }
   }
 
@@ -164,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: DropdownButton(
                         value: _value,
                         dropdownColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
-                        items: <DropdownMenuItem<int>>[
+                        items: const <DropdownMenuItem<int>>[
                           DropdownMenuItem(
                             child: Text(
                               'Light',
@@ -206,8 +212,176 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-
 class CurrentUserDetails extends StatelessWidget {
+  late bool isContactListEmpty = true;
+  @override
+
+  Widget build(BuildContext context) {
+    nameController.text = loggedInUser.displayName.toString();
+    emailController.text = loggedInUser.email.toString();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Name:',
+          style: TextStyle(
+            color: kWhiteColor,
+            fontSize: 20,
+          ),
+        ),
+        const SizedBox(height: 5.0,),
+        Container(
+            height:50,
+            decoration: kDisabledInputFieldDecoration,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: nameController,
+                    style: const TextStyle(color: kWhiteColor,fontSize: 18),
+                    decoration: const InputDecoration(
+                      enabled: false,
+                      contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      hintStyle: TextStyle(color: kWhiteColor),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: null,
+                  ),
+                ),
+              ],
+            )
+        ),
+        const SizedBox(height: 20,),
+        const Text(
+          'Email ID:',
+          style: TextStyle(
+            color: kWhiteColor,
+            fontSize: 20,
+          ),
+        ),
+        const SizedBox(height: 5.0,),
+        Container(
+            height:50,
+            decoration: kDisabledInputFieldDecoration,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: emailController,
+                    style: const TextStyle(color: kWhiteColor,fontSize: 18),
+                    decoration: const InputDecoration(
+                      enabled: false,
+                      contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                      hintStyle: TextStyle(color: kWhiteColor),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: null,
+                  ),
+                ),
+              ],
+            )
+        ),
+      ],
+    );
+
+    /*return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance.collection('registeredUsers').snapshots(),
+      builder: (_, snapshot) {
+        if (snapshot.hasError) return Text('Error = ${snapshot.error}');
+
+        if (snapshot.hasData) {
+          final docs = snapshot.data!.docs;
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (_, i) {
+              final data = docs[i].data();
+              if(data['emailID'].toString() == loggedInUser.email.toString()){
+                nameController.text = data['fullName'].toString();
+                emailController.text = data['emailID'].toString();
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Name:',
+                      style: TextStyle(
+                        color: kWhiteColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 5.0,),
+                    Container(
+                        height:50,
+                        decoration: kMessageContainerDecoration,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: nameController,
+                                style: const TextStyle(color: kWhiteColor),
+                                decoration: const InputDecoration(
+                                  enabled: false,
+                                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                                  //hintText: 'Type your message here...',
+                                  hintStyle: TextStyle(color: kWhiteColor),
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: null,
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                    const SizedBox(height: 20,),
+                    const Text(
+                      'Email ID:',
+                      style: TextStyle(
+                        color: kWhiteColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 5.0,),
+                    Container(
+                        height:50,
+                        decoration: kMessageContainerDecoration,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: emailController,
+                                style: const TextStyle(color: kWhiteColor),
+                                decoration: const InputDecoration(
+                                  enabled: false,
+                                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                                  //hintText: 'Type your message here...',
+                                  hintStyle: TextStyle(color: kWhiteColor),
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: null,
+                              ),
+                            ),
+                          ],
+                        )
+                    ),
+                  ],
+                );
+              }
+              else{
+                return SizedBox(height:0);
+              }
+            },
+          );
+        }
+
+        return Center(child: CircularProgressIndicator());
+      },
+    );*/
+  }
+}
+
+
+/*class CurrentUserDetails extends StatelessWidget {
   late bool isContactListEmpty = true;
   @override
   Widget build(BuildContext context) {
@@ -218,7 +392,6 @@ class CurrentUserDetails extends StatelessWidget {
 
         if (snapshot.hasData) {
           final docs = snapshot.data!.docs;
-          print('Docs: $docs');
           return ListView.builder(
             itemCount: docs.length,
             itemBuilder: (_, i) {
@@ -305,4 +478,4 @@ class CurrentUserDetails extends StatelessWidget {
       },
     );
   }
-}
+}*/
