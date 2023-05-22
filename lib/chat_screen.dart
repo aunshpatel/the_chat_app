@@ -22,8 +22,8 @@ class _ChatScreenState extends State<ChatScreen> {
     getCurrentUser();
   }
 
-  void getCurrentUser() async{
-    final user = await auth.currentUser;
+  void getCurrentUser(){
+    final user = auth.currentUser;
     if(user!=null){
       loggedInUser = user;
       print('loggedInUser:$loggedInUser');
