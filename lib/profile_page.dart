@@ -141,72 +141,75 @@ class _ProfilePageState extends State<ProfilePage> {
             title: const Text('My Profile'),
             backgroundColor: darkTheme == false ? kLightBackgroundColor.withOpacity(0.3) : Colors.blueGrey,
           ),
-          body: Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-            child:Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(
-                  height: 180,
-                  child: CurrentUserDetails(),
-                ),
-                const SizedBox(height: 20,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Application Theme:',
-                      style: TextStyle(
-                        color: kWhiteColor,
-                        fontSize: 20,
+          body: WillPopScope(
+            onWillPop: () async => false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+              child:Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(
+                    height: 180,
+                    child: CurrentUserDetails(),
+                  ),
+                  const SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Application Theme:',
+                        style: TextStyle(
+                          color: kWhiteColor,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 7.0,
-                    ),
-                    SizedBox(
-                      width: 70.0,
-                      child: DropdownButton(
-                        value: _value,
-                        dropdownColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
-                        items: const <DropdownMenuItem<int>>[
-                          DropdownMenuItem(
-                            child: Text(
-                              'Light',
-                              style: kTextStyle,
+                      const SizedBox(
+                        width: 7.0,
+                      ),
+                      SizedBox(
+                        width: 70.0,
+                        child: DropdownButton(
+                          value: _value,
+                          dropdownColor: darkTheme == false ? kLightBackgroundColor: Colors.blueGrey,
+                          items: const <DropdownMenuItem<int>>[
+                            DropdownMenuItem(
+                              child: Text(
+                                'Light',
+                                style: kTextStyle,
+                              ),
+                              value: 0,
                             ),
-                            value: 0,
-                          ),
-                          DropdownMenuItem(
-                            child: Text(
-                              'Dark',
-                              style: kTextStyle,
+                            DropdownMenuItem(
+                              child: Text(
+                                'Dark',
+                                style: kTextStyle,
+                              ),
+                              value: 1,
                             ),
-                            value: 1,
-                          ),
-                        ],
-                        onChanged: (int? value) async{
-                          setState(() {
-                            _value = value!;
-                            if(value == 0){
-                              darkTheme = false;
-                            }
-                            else if(value == 1){
-                              darkTheme = true;
-                            }
-                            SharedPreferences.getInstance().then((prefs) {
-                              prefs.setBool("darkTheme", darkTheme);
+                          ],
+                          onChanged: (int? value) async{
+                            setState(() {
+                              _value = value!;
+                              if(value == 0){
+                                darkTheme = false;
+                              }
+                              else if(value == 1){
+                                darkTheme = true;
+                              }
+                              SharedPreferences.getInstance().then((prefs) {
+                                prefs.setBool("darkTheme", darkTheme);
+                              });
                             });
-                          });
-                        },
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
+          )
         )
     );
   }
