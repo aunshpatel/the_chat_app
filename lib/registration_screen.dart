@@ -167,7 +167,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
             ),
         )*/
-        appBar: appBarDetails,
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pushNamed(context, WelcomeScreen.id);
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
+        ),
         body:Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SizedBox(

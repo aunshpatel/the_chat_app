@@ -34,28 +34,12 @@ const kLightBlueAccent = Colors.lightBlueAccent;
 
 const kBlueAccent = Colors.blueAccent;
 
-var kSendButtonTextStyle = TextStyle(
+var kSendButtonTextStyle = const TextStyle(
   color: kLightBlueAccent,
   fontWeight: FontWeight.bold,
   fontSize: 18.0,
 );
 
-var appBarDetails = AppBar(
-  leading: Builder(
-    builder: (BuildContext context) {
-      return IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pushNamed(context, WelcomeScreen.id);
-        },
-        tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-      );
-    },
-  ),
-  elevation: 0,
-  centerTitle: true,
-  backgroundColor: darkTheme == false ? kLightBackgroundColor : kDarkBackgroundColor,
-);
 
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -67,8 +51,8 @@ const kMessageTextFieldDecoration = InputDecoration(
 InputDecoration emailInputDecoration(String hintText) {
   return InputDecoration(
     hintText: hintText,
-    hintStyle: TextStyle(color: kWhiteColor),
-    contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+    hintStyle: const TextStyle(color: kWhiteColor),
+    contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
     border: kBorder,
     enabledBorder: kEnabledBorder,
     focusedBorder: kFocusedBorder,
