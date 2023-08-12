@@ -1,13 +1,14 @@
 {
   "project_info": {
     "project_number": "714651199338",
+    "firebase_url": "https://the-chat-app-51b-default-rtdb.firebaseio.com",
     "project_id": "the-chat-app-51b",
     "storage_bucket": "the-chat-app-51b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:714651199338:android:bb1c806d8c95daf186e713",
+        "mobilesdk_app_id": "1:714651199338:android:4ba2620c8dbae5e786e713",
         "android_client_info": {
           "package_name": "com.aunsh.the_chat_app"
         }
@@ -29,6 +30,13 @@
             {
               "client_id": "714651199338-m7h4nu4un33ajs586d1da7o88hfoj0me.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "714651199338-5a28b01unn7biklgkcs502da27mmdurr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aunsh.theChatApp"
+              }
             }
           ]
         }
